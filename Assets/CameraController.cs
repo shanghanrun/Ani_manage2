@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement; //로드 씬
 
 public class CameraController : MonoBehaviour
 {
+    // [SerializeField] GameObject gameManager; 이것 필요없다. 싱글톤이라서 어디서든 참조가능하다.
     public GameObject uiPanel;
     public GameObject uiPanel2; // gameover  패널
     public GameObject princess; // 
@@ -87,7 +88,14 @@ public class CameraController : MonoBehaviour
         }
 
         isGameStarted = true; // 게임이 시작되었음을 표시
-        StartCoroutine(MoveToPosition()); // 카메라 움직임 시작
+
+        // gameManager에서 isFirstGame 값 확인
+        if(GameManager.instance != null && GameManager.instance.isFirstGame){
+            StartCoroutine(MoveToPosition()); // 카메라 움직임 시작
+        }
+        else{
+            isIntroComplete = true;
+        }
     }
 
     // 코루틴으로 1초 대기 후 천천히 내려오는 함수
@@ -224,6 +232,11 @@ public class CameraController : MonoBehaviour
         uiPanel2.SetActive(true);
     }
     void RestartGame(){
+        // 게임 재시작시 처음 게임이 아님을 설정
+        if(GameManager.instance !=null){
+            GameManager.instance.isFirstGame = false;
+        }
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 

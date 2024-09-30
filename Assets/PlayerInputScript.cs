@@ -62,6 +62,9 @@ public class PlayerInputScript : MonoBehaviour
             PS.transform.SetParent(null);
             
         }
+        // if(PS.canOpenDoor){ // key를 얻고 나서 다시 당길 수 있게
+        //     PS.canPullPush = true;
+        // }
 
         if(PS.isBoxContact && PS.canPullPush){ // canPullPush가 가능할 때, 접촉했을 경우
             boxMove = true;

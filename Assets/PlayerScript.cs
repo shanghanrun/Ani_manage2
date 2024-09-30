@@ -103,8 +103,12 @@ public class PlayerScript : MonoBehaviour
                 }
             }
         }
+        if (canOpenDoor)
+        { // key를 얻고 나서 다시 당길 수 있게
+            canPullPush = true;
+        }
 
-        if(meetPrincess) transform.position = meetPos;
+        if (meetPrincess) transform.position = meetPos;
     }
     // State management
     public void ChangeState(string newState)
@@ -159,14 +163,16 @@ public class PlayerScript : MonoBehaviour
             }
         }
         if(other.gameObject.tag =="Box"){
-            if(hiddenKey !=null){ // 키는 한번 받으면 없앤다. 그러므로 없어지지 않았을 때
+            // if(hiddenKey !=null){ // 키는 한번 받으면 없앤다. 그러므로 없어지지 않았을 때
                 if(box !=null){
                     SpriteRenderer boxSR = box.GetComponent<SpriteRenderer>();
                     if (boxSR !=null){
                         boxSR.sprite = newBoxSprite;
                         openBox = true;
                     }
-                    hiddenKey.SetActive(true);
+                    if(!gotKey && !canOpenDoor){ // 이미 키를 가졌을 때와 키를 가져서 문을 열수 있는 상황에서는 나타나지 않게 (반댇일 경우만 나타나게)
+                        hiddenKey.SetActive(true);
+                    }
                 }
                 
                 if(canPullPush){
@@ -176,14 +182,14 @@ public class PlayerScript : MonoBehaviour
                 else { // 상자에 접촉하면 다시 밀 수 있게 한다.(이 코드의미 더 살펴야 될듯)
                     canPullPush = true; 
                 }
-            }
+            // }
         }
         if(other.gameObject.tag == "Key"){
             gotKey = true; 
             canOpenDoor = true;
             if(hiddenKey !=null){
-                // hiddenKey.SetActive(false); // 플레이어가 취득했으므로 모습 사라짐
-                Destroy(hiddenKey); // 다시 box에 부딛치면 나타나면 안된다. 
+                hiddenKey.SetActive(false); // 플레이어가 취득했으므로 모습 사라짐
+                // Destroy(hiddenKey); // 다시 box에 부딛치면 나타나면 안된다. 
             }
             spark2.SetActive(true);
         }
